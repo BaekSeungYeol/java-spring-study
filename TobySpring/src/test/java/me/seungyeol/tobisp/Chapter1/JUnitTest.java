@@ -13,6 +13,12 @@ public class JUnitTest {
 
     static Set<JUnitTest> testObjects = new HashSet<>();
 
+
+    @Test
+    public void fileTest() {
+        System.out.println("test2: "+getClass().getResource("test.css"));
+    }
+
     @Test
     @DisplayName("test1")
     public void test1() {
