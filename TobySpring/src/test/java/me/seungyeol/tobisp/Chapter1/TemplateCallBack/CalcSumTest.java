@@ -35,4 +35,8 @@ class CalcSumTest {
     }
 
 
+    @Test
+    void concatenateStrings() throws IOException {
+        Assertions.assertThat(calculator.concatenate(this.numFilePath)).isEqualTo("1234");
+    }
 }
