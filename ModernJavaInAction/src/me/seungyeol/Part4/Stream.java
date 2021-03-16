@@ -6,8 +6,7 @@ import java.util.stream.Collectors;
 public class Stream {
 
     public static void main(String[] args) {
-//        List<Dish> menu = new ArrayList<>();
-//        List<Dish> lowCaloricDishes = new ArrayList<>();
+        //        List<Dish> lowCaloricDishes = new ArrayList<>();
 //        for(Dish dish : menu) {
 //            if(dish.getCalories() < 400) {
 //                lowCaloricDishes.add(dish);
@@ -73,11 +72,45 @@ public class Stream {
                 .forEach((num) -> {
                     System.out.println(num[0] + " " + num[1]);
                 });
+
+        List<Dish> menu = new ArrayList<>(List.of(
+                new Dish(314,"t1",false),
+                new Dish(111,"t2",true)
+        ));
+        if(menu.stream().anyMatch(Dish::isVegetarian)) {
+            System.out.println("The menu is vegetarian friendly");
+        }
+
+        menu.stream().allMatch(dish -> dish.getCalories() < 1000);
+        menu.stream().noneMatch(d -> d.getCalories() >= 1000);
+
+        menu.stream().filter(Dish::isVegetarian).findAny()
+                .ifPresent(d -> System.out.println(d.getName()));
+
+        List<Integer> someNumbers = Arrays.asList(1,2,3,4,5);
+        Optional<Integer> firstSquareDivisibleByThree = someNumbers.stream()
+                .map(n -> n * n)
+                .filter(n -> n % 3 == 0)
+                .findFirst();
+
+
+
     }
 
     public static class Dish {
         int calories;
         String name;
+        boolean vegetarian;
+
+        public Dish(int calories, String name, boolean vegetarian) {
+            this.calories = calories;
+            this.name = name;
+            this.vegetarian = vegetarian;
+        }
+
+        public boolean isVegetarian() {
+            return vegetarian;
+        }
 
         public int getCalories() {
             return calories;
