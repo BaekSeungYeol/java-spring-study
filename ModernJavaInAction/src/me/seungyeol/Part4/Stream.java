@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 public class Stream {
 
     public static void main(String[] args) {
-        //        List<Dish> lowCaloricDishes = new ArrayList<>();
+            List<Dish> lowCaloricDishes = new ArrayList<>();
 //        for(Dish dish : menu) {
 //            if(dish.getCalories() < 400) {
 //                lowCaloricDishes.add(dish);
@@ -65,34 +65,45 @@ public class Stream {
 //                .collect(Collectors.toList());
 
 
-        List<Integer> numbers1 = Arrays.asList(1,2,3);
-        List<Integer> numbers2 = Arrays.asList(3,4);
-
-        numbers1.stream().flatMap(n -> numbers2.stream().filter(m -> (n+m)%3 == 0).map(m -> new Integer[]{n,m}))
-                .forEach((num) -> {
-                    System.out.println(num[0] + " " + num[1]);
-                });
-
+//        List<Integer> numbers1 = Arrays.asList(1,2,3);
+//        List<Integer> numbers2 = Arrays.asList(3,4);
+//
+//        numbers1.stream().flatMap(n -> numbers2.stream().filter(m -> (n+m)%3 == 0).map(m -> new Integer[]{n,m}))
+//                .forEach((num) -> {
+//                    System.out.println(num[0] + " " + num[1]);
+//                });
+//
         List<Dish> menu = new ArrayList<>(List.of(
                 new Dish(314,"t1",false),
                 new Dish(111,"t2",true)
         ));
-        if(menu.stream().anyMatch(Dish::isVegetarian)) {
-            System.out.println("The menu is vegetarian friendly");
-        }
+//        if(menu.stream().anyMatch(Dish::isVegetarian)) {
+//            System.out.println("The menu is vegetarian friendly");
+//        }
+//
+//        menu.stream().allMatch(dish -> dish.getCalories() < 1000);
+//        menu.stream().noneMatch(d -> d.getCalories() >= 1000);
+//
+//        menu.stream().filter(Dish::isVegetarian).findAny()
+//                .ifPresent(d -> System.out.println(d.getName()));
+//
+//        List<Integer> someNumbers = Arrays.asList(1,2,3,4,5);
+//        Optional<Integer> firstSquareDivisibleByThree = someNumbers.stream()
+//                .map(n -> n * n)
+//                .filter(n -> n % 3 == 0)
+//                .findFirst();
+//
 
-        menu.stream().allMatch(dish -> dish.getCalories() < 1000);
-        menu.stream().noneMatch(d -> d.getCalories() >= 1000);
+        ArrayList<Integer> numbers = new ArrayList<>();
+        numbers.addAll(List.of(
+                3,4,5,6,7,8
+        ));
+        numbers.stream().reduce(0, Integer::sum);
+        numbers.stream().reduce(1,(a,b) -> a*b);
 
-        menu.stream().filter(Dish::isVegetarian).findAny()
-                .ifPresent(d -> System.out.println(d.getName()));
+        Optional<Integer> max = numbers.stream().reduce(Math::max);
 
-        List<Integer> someNumbers = Arrays.asList(1,2,3,4,5);
-        Optional<Integer> firstSquareDivisibleByThree = someNumbers.stream()
-                .map(n -> n * n)
-                .filter(n -> n % 3 == 0)
-                .findFirst();
-
+        menu.stream().map(d -> 1).reduce(Integer::sum);
 
 
     }
