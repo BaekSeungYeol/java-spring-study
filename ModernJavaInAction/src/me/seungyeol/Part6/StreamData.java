@@ -5,6 +5,7 @@ import me.seungyeol.Part4.Stream;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
@@ -73,9 +74,36 @@ public class StreamData {
                     else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
                     else return CaloricLevel.FAT; }, toCollection(HashSet::new) )));
 
+        Map<Boolean, List<Dish>> partitionedMenu = menu.stream().collect(partitioningBy(Dish::isVegetarian));
+        List<Dish> dishes = partitionedMenu.get(true);
+
+        menu.stream().collect(
+                partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType))
+        );
+
+        menu.stream().collect(
+                partitioningBy(Dish::isVegetarian, collectingAndThen(maxBy(comparingInt(Dish::getCalories)),
+                        Optional::get))
+        );
+
+        menu.stream().collect(partitioningBy(Dish::isVegetarian, partitioningBy(d -> d.getCalories() <= 400)));
+        menu.stream().collect(partitioningBy(Dish::isVegetarian,counting()));
+
+
     }
 
-    private static CaloricLevel apply(Dish dish) {
+    public Map<Boolean, List<Integer>> partitionPrimes(int n) {
+        return IntStream.rangeClosed(2,n).boxed().collect(
+                partitioningBy(this::isPrime));
+
+    }
+
+    public boolean isPrime(int candidate) {
+        int candidateRoot = (int) Math.sqrt((double) candidate);
+        return IntStream.range(2, candidate).noneMatch(i -> candidate % i == 0);
+    }
+
+        private static CaloricLevel apply(Dish dish) {
         if (dish.getCalories() <= 400) return CaloricLevel.DIET;
         else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
         else return CaloricLevel.FAT;
