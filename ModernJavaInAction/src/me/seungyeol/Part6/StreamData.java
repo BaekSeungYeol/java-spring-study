@@ -6,12 +6,13 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
 
 public class StreamData {
     public static void main(String[] args) {
 
-        Comparator<Dish> dishCaloriesComparator = Comparator.comparingInt(Dish::getCalories);
+        Comparator<Dish> dishCaloriesComparator = comparingInt(Dish::getCalories);
 
         List<Dish> menu = new ArrayList<>(List.of(
                 new Dish("pork", false, 800, Dish.Type.MEAT),
@@ -44,6 +45,34 @@ public class StreamData {
         Map<Dish.Type, List<Dish>> caloricDishesByType = menu.stream().filter(d -> d.getCalories() > 500)
                 .collect(groupingBy(Dish::getType));
         System.out.println(caloricDishesByType);
+
+        Map<Dish.Type, Map<CaloricLevel, List<Dish>>> dishesByTypeCaloricLevel = menu.stream().collect(
+                groupingBy(Dish::getType,
+                        groupingBy(dish -> {
+                            if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+                            else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+                            else return CaloricLevel.FAT;
+                        })
+                ));
+
+        menu.stream().collect(groupingBy(Dish::getType, maxBy(comparingInt(Dish::getCalories))));
+        menu.stream().collect(groupingBy(Dish::getType, Collectors.collectingAndThen(maxBy(comparingInt(Dish::getCalories)), Optional::get)));
+        Map<Dish.Type, Set<CaloricLevel>> ret = menu.stream().collect(
+                groupingBy(Dish::getType, mapping(dish -> {
+                    if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+                    else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+                    else return CaloricLevel.FAT;
+                }, toSet())));
+
+        System.out.println(ret);
+
+
+        menu.stream().collect(
+                groupingBy(Dish::getType, mapping(dish -> {
+                    if(dish.getCalories() <= 400) return CaloricLevel.DIET;
+                    else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+                    else return CaloricLevel.FAT; }, toCollection(HashSet::new) )));
+
     }
 
     private static CaloricLevel apply(Dish dish) {
