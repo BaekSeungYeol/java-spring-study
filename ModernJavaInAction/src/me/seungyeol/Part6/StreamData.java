@@ -4,6 +4,10 @@ import me.seungyeol.Part4.Stream;
 
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -90,6 +94,13 @@ public class StreamData {
         menu.stream().collect(partitioningBy(Dish::isVegetarian,counting()));
 
 
+
+    }
+    public Supplier<Map<Boolean, List<Integer>>> supplier() {
+       return () -> new HashMap<Boolean,List<Integer>>() {{
+                put(true,new ArrayList<Integer>());
+                put(false, new ArrayList<Integer>());
+            }};
     }
 
     public Map<Boolean, List<Integer>> partitionPrimes(int n) {
