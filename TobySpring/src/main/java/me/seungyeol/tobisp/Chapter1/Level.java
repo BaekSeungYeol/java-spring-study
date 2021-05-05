@@ -11,6 +11,7 @@ public enum Level {
         SILVER.next = GOLD;
         GOLD.next = null;
     }
+
     Level(int value) {
         this.value = value;
     }
