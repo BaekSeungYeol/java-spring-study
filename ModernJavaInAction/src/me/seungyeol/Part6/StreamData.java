@@ -1,11 +1,9 @@
 package me.seungyeol.Part6;
 
-import me.seungyeol.Part4.Stream;
-
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -105,9 +103,10 @@ public class StreamData {
 
         menu.stream()
                 .collect(groupingBy(Dish::getType, mapping(dish -> {
-                    if(dish.getCalories() <= 400) return CaloricLevel.DIET;
-                    else if(dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-                    else return CaloricLevel.FAT; },
+                            if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+                            else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+                            else return CaloricLevel.FAT;
+                        },
                         Collectors.toCollection(HashSet::new))));
 
 
@@ -118,18 +117,46 @@ public class StreamData {
         }
 
         menu.stream()
-                .collect(partitioningBy(Dish::isVegetarian,collectingAndThen(maxBy(comparingInt(Dish::getCalories)),Optional::get)));
+                .collect(partitioningBy(Dish::isVegetarian, collectingAndThen(maxBy(comparingInt(Dish::getCalories)), Optional::get)));
 
     }
+    public static boolean isPrime(List<Integer> primes, int candidate) {
+        int candidateRoot = (int)Math.sqrt((double)candidate);
+        return primes.stream().takeWhile(i -> i <= candidateRoot).noneMatch(i -> candidate%i == 0);
+    }
+
+    public static <A> List<A> takeWhile(List<A> list, Predicate<A> p) {
+        int i = 0;
+        for(A l : list) {
+            if(!p.test(l))
+                return list.subList(0,i);
+            i++;
+        }
+        return list;
+    }
+
+    static int numElementsInCommon(Set<?> s1, Set<?> s2) {
+        int result = 0;
+        for (Object o1 : s1)
+            if (s2.contains(o1))
+                result++;
+
+        return result;
+    }
+
+    public static void test(List<?> a, Integer bb) {
+        a.add(null);
+    }
+
     public Supplier<Map<Boolean, List<Integer>>> supplier() {
-       return () -> new HashMap<Boolean,List<Integer>>() {{
-                put(true,new ArrayList<Integer>());
-                put(false, new ArrayList<Integer>());
-            }};
+        return () -> new HashMap<Boolean, List<Integer>>() {{
+            put(true, new ArrayList<Integer>());
+            put(false, new ArrayList<Integer>());
+        }};
     }
 
     public Map<Boolean, List<Integer>> partitionPrimes(int n) {
-        return IntStream.rangeClosed(2,n).boxed().collect(
+        return IntStream.rangeClosed(2, n).boxed().collect(
                 partitioningBy(this::isPrime));
 
     }
@@ -139,13 +166,13 @@ public class StreamData {
         return IntStream.range(2, candidate).noneMatch(i -> candidate % i == 0);
     }
 
-        private static CaloricLevel apply(Dish dish) {
+    private static CaloricLevel apply(Dish dish) {
         if (dish.getCalories() <= 400) return CaloricLevel.DIET;
         else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
         else return CaloricLevel.FAT;
     }
 
-    public enum CaloricLevel { DIET, NORMAL, FAT }
+    public enum CaloricLevel {DIET, NORMAL, FAT}
 
     public static class Dish {
         private final String name;
@@ -176,7 +203,7 @@ public class StreamData {
             return type;
         }
 
-        public enum Type { MEAT, FISH, OTHER }
+        public enum Type {MEAT, FISH, OTHER}
 
         @Override
         public String toString() {
